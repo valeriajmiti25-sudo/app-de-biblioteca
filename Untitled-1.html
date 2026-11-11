@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestión de Biblioteca - Aplicación Web</title>
+  <!-- Tailwind CSS CDN para estilos rápidos y responsivos -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome CDN para iconografía -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen flex flex-col">
+
+  <!-- ==================== ENCABEZADO Y NAVEGACIÓN (Diseño de Navegación / UI) ==================== -->
+  <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-book-bookmark text-3xl text-amber-300"></i>
+        <div>
+          <h1 class="text-2xl font-bold leading-tight">Biblioteca Central Web</h1>
+          <p class="text-xs text-indigo-200">Sistema de Gestión &amp; 7 Actividades de Diseño</p>
+        </div>
+      </div>
+      
+      <!-- Control de Rutas mediante Tabs -->
+      <nav class="flex gap-2">
+        <button onclick="switchTab('catalog')" id="btn-catalog" class="px-4 py-2 rounded-lg font-medium text-sm transition bg-indigo-800 text-white">
+          <i class="fa-solid fa-book mr-2"></i>Catálogo
+        </button>
+        <button onclick="switchTab('loans')" id="btn-loans" class="px-4 py-2 rounded-lg font-medium text-sm transition text-indigo-100 hover:bg-indigo-600">
+          <i class="fa-solid fa-hand-holding-hand mr-2"></i>Mis Préstamos (<span id="loan-count">0</span>)
+        </button>
+        <button onclick="switchTab('design')" id="btn-design" class="px-4 py-2 rounded-lg font-medium text-sm transition text-indigo-100 hover:bg-indigo-600">
+          <i class="fa-solid fa-diagram-project mr-2"></i>7 Actividades de Diseño
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
+  <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+
+    <!-- SECCIÓN 1: CATÁLOGO DE LIBROS (Diseño de UI y Contenido) -->
+    <section id="sec-catalog" class="space-y-6">
+      <!-- Filtros y Búsqueda -->
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-4 justify-between">
+        <div class="relative flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-400"></i>
+          <input type="text" id="search-input" oninput="filterBooks()" placeholder="Buscar por título, autor o ISBN..." class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+        </div>
+        <div class="flex gap-2">
+          <select id="category-filter" onchange="filterBooks()" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="all">Todas las categorías</option>
+            <option value="Ficción">Ficción</option>
+            <option value="Tecnología">Tecnología</option>
+            <option value="Ciencia">Ciencia</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Grid dinámico de Libros -->
+      <div id="books-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Renderizado dinámicamente vía JavaScript -->
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: CONTROL DE PRÉSTAMOS Y MULTAS (Diseño de Componentes) -->
+    <section id="sec-loans" class="hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <h2 class="text-xl font-bold mb-4 text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Registro de Préstamos Activos y Multas
+        </h2>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600">
+                <th class="p-3">Libro</th>
+                <th class="p-3">Fecha Solicitud</th>
+                <th class="p-3">Fecha Límite</th>
+                <th class="p-3">Estado / Multa</th>
+                <th class="p-3">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="loans-table-body" class="divide-y divide-slate-100">
+              <!-- Renderizado dinámicamente vía JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: DOCUMENTACIÓN DE LAS 7 ACTIVIDADES DE DISEÑO WEB -->
+    <section id="sec-design" class="hidden space-y-6">
+      <div class="bg-indigo-900 text-white p-6 rounded-xl shadow-md">
+        <h2 class="text-2xl font-bold mb-2">Las 7 Actividades de Diseño de Aplicaciones Web (WebE)</h2>
+        <p class="text-indigo-200 text-sm">
+          A continuación se detalla el cumplimiento técnico de cada una de las actividades del ciclo de vida de diseño de software aplicadas a esta aplicación:
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Actividad 1 -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center gap-3 text-indigo-600">
+            <i class="fa-solid fa-sitemap text-2xl"></i>
+            <h3 class="font-bold text-lg">1. Diseño de la Arquitectura</h3>
+          </div>
+          <p class="text-sm text-slate-600">
+            Implementación de una arquitectura <strong>Single Page Application (SPA)</strong> desacoplada. Toda la lógica del cliente responde mediante manipulación del DOM e interacción de datos en formato JSON.
+          </p>
+        </div>
+
+        <!-- Actividad 2 -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center gap-3 text-emerald-600">
+            <i class="fa-solid fa-display text-2xl"></i>
+            <h3 class="font-bold text-lg">2. Diseño de la Interfaz (UI/UX)</h3>
+          </div>
+          <p class="text-sm text-slate-600">
+            Uso de un sistema visual basado en componentes tipo tarjetas (Cards), contraste claro de disponibilidad visual (Verde: Disponible / Rojo: Agotado) y botones inhabilitados en caso de stock cero.
+          </p>
+        </div>
+
+        <!-- Actividad 3 -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center gap-3 text-amber-600">
+            <i class="fa-solid fa-file-lines text-2xl"></i>
+            <h3 class="font-bold text-lg">3. Diseño de Contenido</h3>
+          </div>
+          <p class="text-sm text-slate-600">
+            Estructuración rigurosa de las entidades del catálogo: Portada, Título, Autor, Categoría temática, Código de catálogo (ISBN) y control del volumen de ejemplares en stock.
+          </p>
+        </div>
+
+        <!-- Actividad 4 -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center gap-3 text-rose-600">
+            <i class="fa-solid fa-route text-2xl"></i>
+            <h3 class="font-bold text-lg">4. Diseño de Navegación</h3>
+          </div>
+          <p class="text-sm text-slate-600">
+            Es
